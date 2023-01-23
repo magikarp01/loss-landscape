@@ -269,7 +269,7 @@ def setup_direction(args, dir_file, net):
     print ("direction file created: %s" % dir_file)
 
 
-def name_direction_file(args):
+def name_direction_file(args, folder_name=None):
     """ Name the direction file that stores the random directions. """
 
     if args.dir_file:
@@ -277,8 +277,15 @@ def name_direction_file(args):
         return args.dir_file
 
     dir_file = ""
+    if folder_name is not None:
+        dir_file += folder_name + "/"
+
+    dir_file += 'iter_' + str(args.iter)
 
     file1, file2, file3 = args.model_file, args.model_file2, args.model_file3
+    
+    # my own addition to make this easier
+    # file3='MS_DT_20_3'
 
     # name for xdirection
     if file2:

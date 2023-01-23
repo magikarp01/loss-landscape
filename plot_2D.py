@@ -184,7 +184,7 @@ def plot_2d_eig_ratio(surf_file, val_1='min_eig', val_2='max_eig', show=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Plot 2D loss surface')
-    parser.add_argument('--surf_file', '-f', default='', help='The h5 file that contains surface values')
+    parser.add_argument('--surf_file', '-f', default='', help='The h5 file that contains suddddddddddddddddrface values')
     parser.add_argument('--dir_file', default='', help='The h5 file that contains directions')
     parser.add_argument('--proj_file', default='', help='The h5 file that contains the projected trajectories')
     parser.add_argument('--surf_name', default='train_loss', help='The type of surface to plot')

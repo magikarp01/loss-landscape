@@ -23,6 +23,7 @@ import plot_1D
 import model_loader
 import scheduler
 import mpi4pytorch as mpi
+from MS_Gen_Dataset import MazeSolvingDataset
 
 def name_surface_file(args, dir_file):
     # skip if surf_file is specified in args
@@ -204,6 +205,9 @@ if __name__ == '__main__':
     parser.add_argument('--log', action='store_true', default=False, help='use log scale for loss values')
     parser.add_argument('--plot', action='store_true', default=False, help='plot figures after computation')
 
+    # num iterations
+    parser.add_argument('--iter', default=20, type=int, help='A string with format xmin:x_max:xnum')
+    
     args = parser.parse_args()
 
     torch.manual_seed(123)
@@ -241,7 +245,7 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Load models and extract parameters
     #--------------------------------------------------------------------------
-    net = model_loader.load(args.dataset, args.model, args.model_file)
+    net = model_loader.load(args.dataset, args.model, args.model_file, num_iter=args.iter)
     w = net_plotter.get_weights(net) # initial parameters
     s = copy.deepcopy(net.state_dict()) # deepcopy since state_dict are references
     if args.ngpu > 1:
@@ -251,7 +255,7 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Setup the direction file and the surface file
     #--------------------------------------------------------------------------
-    dir_file = net_plotter.name_direction_file(args) # name the direction file
+    dir_file = net_plotter.name_direction_file(args, folder_name="iteration_models") # name the direction file
     if rank == 0:
         net_plotter.setup_direction(args, dir_file, net)
 
@@ -292,10 +296,10 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Plot figures
     #--------------------------------------------------------------------------
-    if args.plot and rank == 0:
-        if args.y and args.proj_file:
-            plot_2D.plot_contour_trajectory(surf_file, dir_file, args.proj_file, 'train_loss', args.show)
-        elif args.y:
-            plot_2D.plot_2d_contour(surf_file, 'train_loss', args.vmin, args.vmax, args.vlevel, args.show)
-        else:
-            plot_1D.plot_1d_loss_err(surf_file, args.xmin, args.xmax, args.loss_max, args.log, args.show)
+    # if args.plot and rank == 0:
+    #     if args.y and args.proj_file:
+    #         plot_2D.plot_contour_trajectory(surf_file, dir_file, args.proj_file, 'train_loss', args.show)
+    #     elif args.y:
+    #         plot_2D.plot_2d_contour(surf_file, 'train_loss', args.vmin, args.vmax, args.vlevel, args.show)
+    #     else:
+    #         plot_1D.plot_1d_loss_err(surf_file, args.xmin, args.xmax, args.loss_max, args.log, args.show)
